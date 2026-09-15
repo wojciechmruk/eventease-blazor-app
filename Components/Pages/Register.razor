@@ -1,0 +1,24 @@
+@page "/register/{EventId:int}"
+@using EventEaseApp.Models
+@rendermode InteractiveServer
+
+<PageTitle>Register for event</PageTitle>
+
+<div class="panel">
+    <p class="eyebrow">Registration</p>
+    <h2>@EventTitle</h2>
+    <RegistrationForm EventId="EventId" />
+</div>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private string EventTitle => EventId switch
+    {
+        1 => "Tech Meetup 2026",
+        2 => "Design Thinking Workshop",
+        3 => "Open Source Community Day",
+        _ => "Selected Event"
+    };
+}

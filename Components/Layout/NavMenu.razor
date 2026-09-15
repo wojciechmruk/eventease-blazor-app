@@ -1,0 +1,39 @@
+﻿@using EventEaseApp.Services
+@inject UserSessionService UserSession
+@implements IDisposable
+
+<div class="nav-header">
+    <span class="brand-mark">E</span>
+    <span>EventEase</span>
+</div>
+
+<nav class="nav-menu">
+    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
+    <NavLink class="nav-link" href="attendance">Attendance</NavLink>
+</nav>
+
+@if (!string.IsNullOrWhiteSpace(UserSession.CurrentUserName))
+{
+    <div class="session-box">
+        <span>Signed in as</span>
+        <strong>@UserSession.CurrentUserName</strong>
+    </div>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        UserSession.StateChanged += Refresh;
+    }
+
+    private void Refresh()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        UserSession.StateChanged -= Refresh;
+    }
+}
+

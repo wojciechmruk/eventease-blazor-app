@@ -1,0 +1,77 @@
+@using EventEaseApp.Models
+@using EventEaseApp.Services
+@inject UserSessionService UserSession
+@inject AttendanceService AttendanceService
+@inject NavigationManager Navigation
+
+<EditForm Model="_model" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="fullName">Full name</label>
+        <InputText id="fullName" class="form-control" @bind-Value="_model.FullName" />
+        <ValidationMessage For="() => _model.FullName" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <InputText id="email" class="form-control" @bind-Value="_model.Email" />
+        <ValidationMessage For="() => _model.Email" />
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="attendanceType">Attendance type</label>
+            <InputSelect id="attendanceType" class="form-control" @bind-Value="_model.AttendanceType">
+                <option value="In Person">In Person</option>
+                <option value="Virtual">Virtual</option>
+                <option value="Hybrid">Hybrid</option>
+            </InputSelect>
+        </div>
+
+        <div class="form-group">
+            <label for="guests">Guests</label>
+            <InputNumber id="guests" class="form-control" @bind-Value="_model.GuestCount" />
+            <ValidationMessage For="() => _model.GuestCount" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="notes">Special notes</label>
+        <InputTextArea id="notes" class="form-control" @bind-Value="_model.SpecialNotes" />
+    </div>
+
+    <button class="btn btn-primary" type="submit" disabled="@_isSubmitting">
+        @_submitLabel
+    </button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private readonly RegistrationModel _model = new();
+    private bool _isSubmitting;
+    private string _submitLabel => _isSubmitting ? "Saving..." : "Register now";
+
+    private void HandleSubmit()
+    {
+        _isSubmitting = true;
+
+        var attendee = new AttendeeRecord
+        {
+            EventId = EventId,
+            FullName = _model.FullName,
+            Email = _model.Email,
+            GuestCount = _model.GuestCount,
+            AttendanceType = _model.AttendanceType,
+            SpecialNotes = _model.SpecialNotes,
+            RegisteredAt = DateTime.UtcNow
+        };
+
+        AttendanceService.AddAttendee(attendee);
+        UserSession.Login(_model.FullName);
+        Navigation.NavigateTo("/attendance");
+    }
+}

@@ -1,0 +1,56 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using EventEaseApp.Models
+
+<PageTitle>EventEase Home</PageTitle>
+
+<div class="page-intro">
+    <div>
+        <p class="eyebrow">Explore events</p>
+        <h2>Upcoming experiences</h2>
+    </div>
+    <a class="btn btn-primary" href="/attendance">View attendance tracker</a>
+</div>
+
+<div class="event-grid">
+    @foreach (var eventItem in Events)
+    {
+        <EventCard Event="eventItem" />
+    }
+</div>
+
+@code {
+    private readonly List<EventItem> Events =
+    [
+        new EventItem
+        {
+            Id = 1,
+            Title = "Tech Meetup 2026",
+            Date = "Oct 12, 2026",
+            Location = "Warsaw, PL",
+            Description = "A networking event for developers and product leaders focused on AI and community building.",
+            Capacity = 120,
+            SeatsLeft = 42
+        },
+        new EventItem
+        {
+            Id = 2,
+            Title = "Design Thinking Workshop",
+            Date = "Oct 18, 2026",
+            Location = "Cracow, PL",
+            Description = "Hands-on workshop for design teams to rapidly prototype ideas and improve user journeys.",
+            Capacity = 80,
+            SeatsLeft = 19
+        },
+        new EventItem
+        {
+            Id = 3,
+            Title = "Open Source Community Day",
+            Date = "Nov 02, 2026",
+            Location = "Gdansk, PL",
+            Description = "Meet maintainers, contributors, and open-source enthusiasts for sessions and community demos.",
+            Capacity = 200,
+            SeatsLeft = 67
+        }
+    ];
+}

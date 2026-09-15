@@ -1,0 +1,27 @@
+@using EventEaseApp.Models
+@inject NavigationManager Navigation
+
+<div class="event-card">
+    <div class="event-card__header">
+        <span class="event-badge">Event</span>
+        <h3>@Event.Title</h3>
+    </div>
+
+    <p class="event-meta">@Event.Date • @Event.Location</p>
+    <p>@Event.Description</p>
+
+    <div class="event-card__footer">
+        <span>@Event.SeatsLeft seats left</span>
+        <button class="btn btn-primary" type="button" @onclick="NavigateToRegistration">Register</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventItem Event { get; set; } = new();
+
+    private void NavigateToRegistration()
+    {
+        Navigation.NavigateTo($"/register/{Event.Id}");
+    }
+}

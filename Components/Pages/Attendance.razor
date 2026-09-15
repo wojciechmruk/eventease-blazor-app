@@ -1,0 +1,45 @@
+@page "/attendance"
+@using EventEaseApp.Models
+@using EventEaseApp.Services
+@inject AttendanceService AttendanceService
+@inject UserSessionService UserSession
+@rendermode InteractiveServer
+
+<PageTitle>Attendance Tracker</PageTitle>
+
+<div class="panel">
+    <p class="eyebrow">Attendance tracker</p>
+    <h2>Workshop registrations</h2>
+
+    <div class="summary-grid">
+        <div class="summary-card">
+            <h3>Total attendees</h3>
+            <strong>@AttendanceService.Attendees.Count</strong>
+        </div>
+        <div class="summary-card">
+            <h3>Signed in</h3>
+            <strong>@(string.IsNullOrWhiteSpace(UserSession.CurrentUserName) ? "No" : UserSession.CurrentUserName)</strong>
+        </div>
+        <div class="summary-card">
+            <h3>Event 1</h3>
+            <strong>@AttendanceService.CountForEvent(1)</strong>
+        </div>
+    </div>
+
+    <ul class="attendee-list">
+        @if (!AttendanceService.Attendees.Any())
+        {
+            <li>No registrations yet.</li>
+        }
+        else
+        {
+            @foreach (var attendee in AttendanceService.Attendees)
+            {
+                <li>
+                    <strong>@attendee.FullName</strong> — @attendee.AttendanceType<br />
+                    Event @attendee.EventId • @attendee.Email • Guests: @attendee.GuestCount
+                </li>
+            }
+        }
+    </ul>
+</div>
